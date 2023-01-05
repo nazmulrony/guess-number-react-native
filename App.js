@@ -9,14 +9,19 @@ import { useFonts } from "expo-font";
 export default function App() {
     const [userNumber, setUserNumber] = useState(null);
     const [gameIsOver, setGameIsOver] = useState(true);
+    const [guessRounds, setGuessRounds] = useState(0);
 
-    useFonts({
-        "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
-        "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
-    });
+    // useFonts({
+    //     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    //     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    // });
     const pickedNumberHandler = (pickedNumber) => {
         setUserNumber(pickedNumber);
         setGameIsOver(false);
+    };
+    const startNewGameHandler = () => {
+        setUserNumber(null);
+        setGuessRounds(0);
     };
 
     let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />;
@@ -26,11 +31,18 @@ export default function App() {
                 userNumber={userNumber}
                 onGameOver={setGameIsOver}
                 gameIsOver={gameIsOver}
+                numberOfRounds={setGuessRounds}
             />
         );
     }
     if (gameIsOver && userNumber) {
-        screen = <GameOverScreen />;
+        screen = (
+            <GameOverScreen
+                roundsNumber={guessRounds}
+                userNumber={userNumber}
+                onStartNewGame={startNewGameHandler}
+            />
+        );
     }
     return (
         <LinearGradient
